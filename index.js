@@ -18,7 +18,7 @@ function AdvancedHttpTemperatureHumidity(log, config) {
     this.username = config["username"] || "";
     this.password = config["password"] || "";
 
-    this.name = config["name"];
+    this.name = config["room"] || config["name"];
 
     this.manufacturer = config["manufacturer"] || "HttpTemperatureHumidity";
     this.model = config["model"] || "Default";
@@ -89,14 +89,14 @@ AdvancedHttpTemperatureHumidity.prototype = {
             .setCharacteristic(Characteristic.SerialNumber, this.serial);
         services.push(informationService);
 
-        temperatureService = new Service.TemperatureSensor(this.name);
+        temperatureService = new Service.TemperatureSensor(this.name + " Temperature");
         temperatureService
             .getCharacteristic(Characteristic.CurrentTemperature)
             .on('get', this.getState.bind(this));
         services.push(temperatureService);
 
         if (this.disableHumidity !== true) {
-            this.humidityService = new Service.HumiditySensor(this.name);
+            this.humidityService = new Service.HumiditySensor(this.name + " Humidity");
             this.humidityService
                 .getCharacteristic(Characteristic.CurrentRelativeHumidity)
                 .setProps({minValue: 0, maxValue: 100})
