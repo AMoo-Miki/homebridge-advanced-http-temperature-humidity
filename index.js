@@ -24,7 +24,7 @@ function AdvancedHttpTemperatureHumidity(log, config) {
     this.model = config["model"] || "HTTP";
     this.serial = config["serial"] || "18981898";
 
-    this.disableHumidity = config["humidity"] || false;
+    this.disableHumidity = config["disableHumidity"] || false;
 
     if (config.modifiers) {
         if (typeof config.modifiers.temperature === 'string') this.temperatureModifier = new Function('x', 'return ' + config.modifiers.temperature);
@@ -63,7 +63,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
     getState: function (callback) {
         this._updating = true;
         this._hasErrors = null;
-        this.httpRequest(this.url, "", "GET", this.username, this.password, this.sendimmediately, function (error, response, responseBody) {
+        this.httpRequest(this.url, "", (this.http_method || "GET"), this.username, this.password, this.sendimmediately, function (error, response, responseBody) {
             if (error) {
                 this._updating = false;
                 this._hasErrors = 'Get Temperature failed: ' + error.message;
